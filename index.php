@@ -1,3 +1,3 @@
 <?php
-    include 'core/database/connection.php'
+    include 'core/init.php';
 ?>
