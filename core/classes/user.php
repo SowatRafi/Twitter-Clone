@@ -12,22 +12,24 @@ class User {
         return $var;
     }
 
-    public function login ($email, $password){
+    public function login($email, $password){
+        $passwordHash = md5($password);
         $stmt = $this->pdo->prepare("SELECT `user_id` FROM `users` WHERE `email` = :email AND `password` = :password");
-        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->bindParam(":password", md5($password), PDO::PARAM_STR);
-        $stmt -> execute();
-
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':password', $passwordHash, PDO::PARAM_STR);
+        $stmt->execute();
+         
+        $count = $stmt->rowCount();
         $user = $stmt->fetch(PDO::FETCH_OBJ);
-        $count = $stmt -> rowCount();
-
+         
         if($count > 0){
-            $_SESSION['user_id'] = $user->user_id;
-            header('Location: home.php');
+        $_SESSION['user_id'] = $user->user_id;
+        header('Location: home.php');
+         
+         
+        }else{
+        return false;
         }
-        else {
-            return false;
         }
-    }
 }
 ?>
