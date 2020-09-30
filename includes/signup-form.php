@@ -5,7 +5,7 @@
 		$email = $_POST['email'];
 		$error = '';
 
-		if(!empty($screenName) or empty($password) or empty($email)){
+		if(empty($screenName) or empty($password) or empty($email)){
 			$error = 'All fields are required';
 		}
 		else {
@@ -24,6 +24,10 @@
 			else {
 				if($getFromU->checkEmail($email) === true){
 					$error = 'Email is already in use';
+				}
+				else {
+					$getFromU->register($email, $screenName, $password);
+					header('Location: home.php');
 				}
 			}
 		}
