@@ -1,7 +1,8 @@
 <?php
     include 'core/init.php';
     $user_id = $_SESSION['user_id'];
-    $user = $getFromU->userData($user_id);
+	$user = $getFromU->userData($user_id);
+	$getFromU->update('users', $user_id, array('username' => 'Esmat'));
 ?>
 <!DOCTYPE HTML> 
  <html>

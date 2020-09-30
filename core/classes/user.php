@@ -56,6 +56,39 @@ class User {
         header('Location: ../index.php');
     }
 
+    public function create($table, $fields = array()){
+        $columns = implode(',', array_keys($fields));
+        $values = ':'.implode(', :', array_keys($fields));
+    $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$values})";
+    if($stmt = $this->pdo->prepare($sql)){
+        foreach ($fields as $key => $data) {
+            $stmt->bindValue(':'.$key, $data);
+        }
+        $stmt->execute();
+        return $this->pdo->lastInsertId();
+    }
+    }
+
+    public function update($table, $user_id, $fields = array()){
+        $columns = '';
+        $i = 1;
+
+        foreach($fields as $name => $value){
+            $columns .= "`{name}` = :{$name}";
+            if ($i < count($fields)){
+                $columns .= ', ';
+            }
+            $i++;
+        $sql = "UPDATE {$table} SET {$columns} WHERE `user_id` = {user_id}";
+            if ($stmt = $this->pdo->prepare($sql)){
+                foreach ($fields as $key => $value){
+                    $stmt->bindValue(':'.$key, $value);
+                }
+                $stmt->execute();
+            }
+        }
+    }
+
     public function checkEmail($email){
         $stmt = $this->pdo->prepare("SELECT `email` FROM `users` WHERE `email` = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
